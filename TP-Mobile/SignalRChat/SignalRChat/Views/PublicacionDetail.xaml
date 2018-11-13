@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SignalRChat.Views.PublicacionDetail">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0">
+                <Label Text="Foro" TextColor="{StaticResource Primary}"></Label>
+            </StackLayout>
+            <StackLayout Grid.Row="1">
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="{Binding titulo}" TextColor="{StaticResource Primary}" x:Name="sTitulo"></Label>
+                    <Label Text="{Binding username}" TextColor="Black" x:Name="sUsername"></Label>
+                </StackLayout>
+            </StackLayout>                 
+
+            <StackLayout Orientation="Horizontal" Grid.Row="2">
+                <WebView WidthRequest="1000" HeightRequest="1000">
+                    <WebView.Source>
+                        <HtmlWebViewSource Html="{Binding cuerpo}" x:Name="sCuerpo"/>
+                    </WebView.Source>
+                </WebView>                    
+            </StackLayout>
+            
+            <StackLayout Orientation="Horizontal" Grid.Row="3">
+                <ListView x:Name="lComentarios">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="Usuario" TextColor="{StaticResource Primary}"></Label>
+                                    <StackLayout Orientation="Horizontal" Grid.Row="4">
+                                        <WebView WidthRequest="1000" HeightRequest="1000">
+                                            <WebView.Source>
+                                                <HtmlWebViewSource Html="{Binding comentario}"/>
+                                            </WebView.Source>
+                                        </WebView>
+                                    </StackLayout>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

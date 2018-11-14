@@ -9,6 +9,7 @@ using Xamarin.Forms.Xaml;
 using Newtonsoft.Json;
 using SignalRChat.ViewModels;
 using System.Net.Http.Headers;
+using System.Net;
 
 namespace SignalRChat.Views
 {
@@ -18,12 +19,15 @@ namespace SignalRChat.Views
         string sMateria { get; set; }
         string sToken { get; set; }
         string sMat { get; set; }
+        string sUsuario { get; set; }
+        string sPublic { get; set; }
         public PublicacionDetail (string userToken, string sPublicacion, string sMatName)
 		{
 			InitializeComponent ();
             MostrarPublicacion(sPublicacion);
             this.sToken = userToken;
             this.sMat = sMatName;
+            this.sPublic = sPublicacion;
 
         }
         public async void MostrarPublicacion(string sPublicacion)
@@ -72,17 +76,94 @@ namespace SignalRChat.Views
             //Application.Current.MainPage = new NavigationPage(new ForoMaterias(this.sToken, this.sMateria, this.sMat));
         }
 
-        public void B_MeGusta(object sender, EventArgs e)
+        public async void B_MeGusta(object sender, EventArgs e)
         {
-            var authentication = new AuthenticationHeaderValue("Token", this.sToken);
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = authentication;
-            /*
-            MeGusta megusta = new MeGusta()
+            HttpClient cliente4 = new HttpClient();
+            var responseMG = await cliente4.GetStringAsync("https://cursivia.herokuapp.com/api_v1/meGusta/");
+            var megustas = JsonConvert.DeserializeObject<List<MeGusta>>(responseMG);
+
+            var ListaMG = new List<MeGusta>();
+            bool isOk = true;
+
+            HttpClient cliente2 = new HttpClient();
+            string sTokenUser = "https://cursivia.herokuapp.com/api_v1/Token/" + this.sToken + "/";
+            var responseU = await cliente2.GetStringAsync(sTokenUser);
+            var sUser = JsonConvert.DeserializeObject<TokenUser>(responseU);
+
+            this.sUsuario = sUser.user;
+
+            foreach (var MG in megustas)
             {
-                
+                if (MG.usuario == this.sUsuario && MG.publicacion == this.sPublic)
+                {
+                    isOk = false;
+                }
             }
-            */
+
+
+            if (isOk)
+            {
+                HttpClient client = new HttpClient();
+
+                MeGusta megusta = new MeGusta()
+                {
+                    //id = 4,
+                    usuario = this.sUsuario,
+                    publicacion = this.sPublic
+                };
+
+                var json = JsonConvert.SerializeObject(megusta);
+
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                try
+                {
+
+                    var result = await client.PostAsync("https://cursivia.herokuapp.com/api_v1/meGusta/", content);
+
+                    if (result.StatusCode == HttpStatusCode.Created)
+                    {
+                        HttpClient cliente3 = new HttpClient();
+
+                        var responseP = await cliente2.GetStringAsync(sPublic);
+                        var sPublicacion = JsonConvert.DeserializeObject<Publicacion>(responseP);
+
+                        Publicacion publicacion = new Publicacion()
+                        {
+                            id = sPublicacion.id,
+                            usuario = sPublicacion.usuario,
+                            titulo = sPublicacion.titulo,
+                            cuerpo = sPublicacion.cuerpo,
+                            fecha_alta = sPublicacion.fecha_alta,
+                            aprovacion = sPublicacion.aprovacion + 1,
+                            tipo_publicacion = sPublicacion.tipo_publicacion,
+                            materia = sPublicacion.materia
+                        };
+
+                        var json2 = JsonConvert.SerializeObject(publicacion);
+
+                        var content2 = new StringContent(json2, Encoding.UTF8, "application/json");
+
+                        var result2 = await client.PutAsync(sPublic, content2);
+
+                        if (result2.IsSuccessStatusCode)
+                        {
+                            Application.Current.MainPage = new NavigationPage(new PublicacionDetail(this.sToken, this.sPublic, this.sMat));
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    var msg = ex.Message;
+                    Console.WriteLine(msg);
+                }
+            }
+            else
+            {
+                await DisplayAlert("Ups!", "Ya te gusta esta publicación", "Ok");
+            }
+
         }
 
         protected override void OnAppearing()

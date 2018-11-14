@@ -14,10 +14,19 @@ namespace SignalRChat.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ForoMaterias : ContentPage
     {
-        public ForoMaterias(string sMateria)
+        
+        string sMat { get; set; }
+        string sMatLink { get; set; }
+        string sToken { get; set; }
+        public ForoMaterias(string userToken, string sMateria, string sMatName)
         {
             InitializeComponent();
             ListarPublicaciones(sMateria);
+            this.sMatLink = sMateria;
+            this.sToken = userToken;
+            this.sMat = sMatName;
+            OnAppearing();
+
         }
 
         public async void ListarPublicaciones(string sMateria)
@@ -30,6 +39,7 @@ namespace SignalRChat.Views
 
             var responsem = await cliente.GetStringAsync(sMateria);
             var materia = JsonConvert.DeserializeObject<Materia>(responsem);
+
             foreach (var publicacion in publicaciones)
             {
                 if (publicacion.materia != null)
@@ -51,11 +61,22 @@ namespace SignalRChat.Views
                 var elementos = e.Item as Publicacion;
                 string sId = Convert.ToString(elementos.id);
                 string sPublicacion = "https://cursivia.herokuapp.com/api_v1/noticias/" + sId + "/";
-                Application.Current.MainPage = new NavigationPage(new PublicacionDetail(sPublicacion));
+                Application.Current.MainPage = new NavigationPage(new PublicacionDetail(this.sToken, sPublicacion, this.sMat));
             }
 
         }
 
+        private void B_Volver(object sender, EventArgs e)
+        {
+            Application.Current.MainPage = new NavigationPage(new Materias(this.sToken));
+        }
+
+        protected override void OnAppearing()
+        {
+            Title = sMat;
+        }
+
 
     }
+
 }

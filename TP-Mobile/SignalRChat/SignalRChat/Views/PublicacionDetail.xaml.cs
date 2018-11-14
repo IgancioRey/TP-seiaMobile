@@ -8,17 +8,22 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Newtonsoft.Json;
 using SignalRChat.ViewModels;
+using System.Net.Http.Headers;
 
 namespace SignalRChat.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class PublicacionDetail : ContentPage
 	{
-        public string sMateria { get; set; }
-        public PublicacionDetail (string sPublicacion)
+        string sMateria { get; set; }
+        string sToken { get; set; }
+        string sMat { get; set; }
+        public PublicacionDetail (string userToken, string sPublicacion, string sMatName)
 		{
 			InitializeComponent ();
             MostrarPublicacion(sPublicacion);
+            this.sToken = userToken;
+            this.sMat = sMatName;
 
         }
         public async void MostrarPublicacion(string sPublicacion)
@@ -47,21 +52,43 @@ namespace SignalRChat.Views
                 if (publicacionPertenece.id == publicacion.id)
                 {
                     ListaComentarios.Add(c);
+                    //Console.WriteLine(c.comentario);
                 }
-
-                lComentarios.ItemsSource = ListaComentarios;
 
             }
 
+            lComentarios.ItemsSource = ListaComentarios;
+
 
         }
-        /*
-        public void bVolver()
+         
+        private void B_Volver(object sender, EventArgs e)
         {
-            Application.Current.MainPage = new NavigationPage(new ForoMaterias(sMateria));
+            Application.Current.MainPage = new NavigationPage(new ForoMaterias(this.sToken, this.sMateria, this.sMat));
         }
-        */
 
+        public void B_Comentar(object sender, EventArgs e)
+        {
+            //Application.Current.MainPage = new NavigationPage(new ForoMaterias(this.sToken, this.sMateria, this.sMat));
+        }
+
+        public void B_MeGusta(object sender, EventArgs e)
+        {
+            var authentication = new AuthenticationHeaderValue("Token", this.sToken);
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = authentication;
+            /*
+            MeGusta megusta = new MeGusta()
+            {
+                
+            }
+            */
+        }
+
+        protected override void OnAppearing()
+        {
+            Title = sMat;
+        }
 
 
 

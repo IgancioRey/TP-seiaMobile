@@ -62,6 +62,7 @@ namespace SignalRChat.Views
                 var resultoJson = JsonConvert.DeserializeObject<Token>(content2);
                 string userToken = resultoJson.token;
                 Application.Current.MainPage = new NavigationPage(new Materias(userToken));
+                //await Navigation.PushAsync (new NavigationPage(new Materias(userToken)));
             }
             else
             {

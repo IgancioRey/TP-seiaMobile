@@ -14,11 +14,13 @@ namespace SignalRChat.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class Materias : ContentPage
 	{
-		public Materias(string userToken)
+        string sToken { get; set; }
+        public Materias(string userToken)
 		{
 			InitializeComponent ();
             ListarMaterias();
-		}
+            this.sToken = userToken;
+        }
 
         public async void ListarMaterias()
         {
@@ -34,7 +36,7 @@ namespace SignalRChat.Views
                 var elementos = e.Item as Materia;
                 string sId = Convert.ToString(elementos.id);
                 string sMateria = "https://cursivia.herokuapp.com/api_v1/materias/" + sId + "/";
-                Application.Current.MainPage = new NavigationPage(new ForoMaterias(sMateria));
+                Application.Current.MainPage = new NavigationPage(new ForoMaterias(this.sToken,sMateria,elementos.descripcion));
             }
         }
          

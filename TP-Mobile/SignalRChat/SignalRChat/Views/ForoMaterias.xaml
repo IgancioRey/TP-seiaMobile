@@ -1,20 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SignalRChat.Views.ForoMaterias">
+             x:Class="SignalRChat.Views.ForoMaterias"
+             Title="Foro Materia">
     <ContentPage.Content>
         <Grid>
-            <ListView x:Name="ListaPublicacionesView">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding titulo}" TextColor="{StaticResource Primary}"></Label>
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackLayout Padding="20" Grid.Row="0" >
+                <Button Clicked="B_Volver" Text="Volver" 
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="{StaticResource LightBackgroundColor}"/>
+            </StackLayout>
+            <StackLayout Padding="20" Grid.Row="1" >
+                <Grid>
+                    <ListView x:Name="ListaPublicacionesView">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding titulo}" TextColor="{StaticResource Primary}"></Label>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </StackLayout>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

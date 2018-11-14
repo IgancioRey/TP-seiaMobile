@@ -3,53 +3,66 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SignalRChat.Views.PublicacionDetail">
     <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
+    <Grid Padding="20" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            
             </Grid.RowDefinitions>
-            <StackLayout Grid.Row="0">
-                <Label Text="Foro" TextColor="{StaticResource Primary}"></Label>
+            <StackLayout Grid.Row="0" >
+                <Button Clicked="B_Volver" Text="Volver" 
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="{StaticResource LightBackgroundColor}"/>
             </StackLayout>
-            <StackLayout Grid.Row="1">
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="{Binding titulo}" TextColor="{StaticResource Primary}" x:Name="sTitulo"></Label>
-                    <Label Text="{Binding username}" TextColor="Black" x:Name="sUsername"></Label>
-                </StackLayout>
-            </StackLayout>                 
 
-            <StackLayout Orientation="Horizontal" Grid.Row="2">
-                <WebView WidthRequest="1000" HeightRequest="1000">
+            <StackLayout  Grid.Row="1" Orientation="Horizontal">
+                <Label Text="{Binding titulo}" TextColor="{StaticResource Primary}" FontSize="Large" x:Name="sTitulo"></Label>
+            </StackLayout>
+        
+            <StackLayout  Grid.Row="2" Orientation="Horizontal">
+                <Label Text="{Binding username}" TextColor="Black" HorizontalOptions="End" Grid.Column="1" x:Name="sUsername"></Label>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Grid.Row="3">
+                <WebView WidthRequest="1000" HeightRequest="1000" VerticalOptions ="FillAndExpand" >
                     <WebView.Source>
                         <HtmlWebViewSource Html="{Binding cuerpo}" x:Name="sCuerpo"/>
                     </WebView.Source>
-                </WebView>                    
+                </WebView>
             </StackLayout>
-            
-            <StackLayout Orientation="Horizontal" Grid.Row="3">
+
+            <StackLayout Grid.Row="4">
+                <Button Clicked="B_MeGusta" Text="Me Gusta" 
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="{StaticResource LightBackgroundColor}"/>
+                <Button Clicked="B_Comentar" Text="Comentar" 
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="{StaticResource LightBackgroundColor}"/>
+            </StackLayout>
+
+        <StackLayout Orientation="Horizontal" Grid.Row="5">
                 <ListView x:Name="lComentarios">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="Usuario" TextColor="{StaticResource Primary}"></Label>
-                                    <StackLayout Orientation="Horizontal" Grid.Row="4">
-                                        <WebView WidthRequest="1000" HeightRequest="1000">
-                                            <WebView.Source>
-                                                <HtmlWebViewSource Html="{Binding comentario}"/>
-                                            </WebView.Source>
-                                        </WebView>
-                                    </StackLayout>
-                                </StackLayout>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.3*"/>
+                                        <ColumnDefinition Width="0.7*"/>
+                                    </Grid.ColumnDefinitions>
+                                <Label Text="Comentario" TextColor="{StaticResource Primary}"></Label>
+                                <Label Text="{Binding comentario}" TextColor="Black" Grid.Column="1"></Label>
+                                </Grid>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-            
-            </StackLayout>
-        </Grid>
+
+        </StackLayout>
+    </Grid>
     </ContentPage.Content>
 </ContentPage>

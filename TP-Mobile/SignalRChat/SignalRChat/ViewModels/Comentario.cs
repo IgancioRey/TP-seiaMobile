@@ -6,9 +6,10 @@ namespace SignalRChat.ViewModels
 {
     class Comentario
     {
-        public int id { get; set; }
+        //public int id { get; set; }
         public string comentario { get; set; }
         public string usuario { get; set; }
         public string publicacion { get; set; }
+        public string estado_comentario { get; set; }
     }
 }

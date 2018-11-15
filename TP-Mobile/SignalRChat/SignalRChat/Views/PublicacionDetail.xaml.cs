@@ -24,10 +24,12 @@ namespace SignalRChat.Views
         public PublicacionDetail (string userToken, string sPublicacion, string sMatName)
 		{
 			InitializeComponent ();
-            MostrarPublicacion(sPublicacion);
             this.sToken = userToken;
             this.sMat = sMatName;
             this.sPublic = sPublicacion;
+
+            MostrarPublicacion(sPublicacion);
+            
 
         }
         public async void MostrarPublicacion(string sPublicacion)
@@ -71,9 +73,14 @@ namespace SignalRChat.Views
             Application.Current.MainPage = new NavigationPage(new ForoMaterias(this.sToken, this.sMateria, this.sMat));
         }
 
-        public void B_Comentar(object sender, EventArgs e)
+        public async void B_Comentar(object sender, EventArgs e)
         {
-            //Application.Current.MainPage = new NavigationPage(new ForoMaterias(this.sToken, this.sMateria, this.sMat));
+            HttpClient cliente = new HttpClient();
+            var responseP = await cliente.GetStringAsync(this.sPublic);
+            var publicacion = JsonConvert.DeserializeObject<Publicacion>(responseP);
+
+
+            Application.Current.MainPage = new NavigationPage(new ComentarPublicacion(this.sToken, this.sPublic, this.sMat, publicacion.titulo));
         }
 
         public async void B_MeGusta(object sender, EventArgs e)
